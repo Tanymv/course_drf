@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     'users',
+    'habits',
 ]
 
 MIDDLEWARE = [
@@ -146,10 +147,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    # #  авторизация для всех эндпойнтов
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+    #  авторизация для всех эндпойнтов
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 
     #  авторизация для каждого эндпойнта пишется отдельно
     # 'DEFAULT_PERMISSION_CLASSES': [
@@ -185,8 +186,8 @@ CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL')
 CELERY_TIMEZONE = TIME_ZONE
 
 CELERY_BEAT_SCHEDULE = {
-    '': {
-        'task': '',  # Путь к задаче
+    'send_tg_reminder': {
+        'task': 'habits.tasks.send_tg_reminder_task',  # Путь к задаче
         'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
     }
 }

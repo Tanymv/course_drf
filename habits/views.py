@@ -1,6 +1,7 @@
 from rest_framework import generics
 
 from habits.models import Habit
+from habits.paginators import HabitsPaginator
 from habits.serializers import HabitSerializer
 from users.permissions import IsOwner
 
@@ -8,7 +9,7 @@ from users.permissions import IsOwner
 class HabitListView(generics.ListAPIView):
     """Контроллер просмотра списка опубликованых привычек"""
     serializer_class = HabitSerializer
-
+    pagination_class = HabitsPaginator
     def get_queryset(self):
         """Фильтруем подборку по признаку публикации"""
         return Habit.objects.filter(is_published=True)

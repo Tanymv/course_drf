@@ -1,38 +1,18 @@
 version: "3"
 
-#services:
-#
-#  db:
-#    image: postgres:latest
-#    volumes:
-#      - pg_data:/var/lib/postgresql/data
-##    env_file:
-##      - .env
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=12345
-#      - POSTGRES_DB=course
-#      - PGDATA=/var/lib/postgresql/data/pgdata
-#    ports:
-#      - "5432:5432"
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
 services:
+
   db:
-    restart: always
-    image: postgres:14.7-alpine
+    image: postgres:latest
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     env_file:
       - .env
-    expose:
-      - '5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -54,8 +34,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-#      migration:
-#        condition: service_completed_successfully
     tty: true
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
@@ -64,14 +42,6 @@ services:
       - .:/habits_app
     restart: always
 
-
-#  migration:
-#    build: .
-#    command: python manage.py makemigrations && python manage.py migrate
-#    depends_on:
-#      - db
-#    volumes:
-#      - .:/habits_app
 
 
   celery:
